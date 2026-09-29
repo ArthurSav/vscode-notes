@@ -14,9 +14,9 @@ Notes are stored in a single location (directory) located anywhere on your syste
 
 The extension can be accessed using the Notes icon that is placed in the Activity Bar, or in the Command Pallet (CMD+Shift+P or CTRL+Shift+P) by typing `Notes`.
 
-* quickly create new notes by using the `Alt+N` shortcut, or by click on the `+` icon at the top when you are in Notes.
+* quickly create new notes by using the `Alt+N` shortcut, or by click on the `+` icon at the top when you are in Notes. Right-click a folder to create a note inside it.
 * quickly access your list of notes by using the `Alt+L` shortcut to bring up a searchable list at the top of VSCode.
-* hovering over a note inside Notes displays two icons, one allows you to rename a note and the other allows you to delete a note. *Deleting a note is permanent, so be careful.*
+* right-clicking a note or folder inside Notes lets you rename or delete it. Deleted notes go to the trash, unless `files.enableTrash` is turned off.
 
 ## Getting Started
 
@@ -32,13 +32,15 @@ code --install-extension vscode-notes-<version>.vsix
 
 If the original `dionmunk.vscode-notes` is installed, uninstall it first: both contribute the same commands and view.
 
+`npm test` runs the integration tests in the VS Code you have installed, in a separate throwaway profile under `.vscode-test/` (set `VSCODE_EXECUTABLE` if VS Code is somewhere else).
+
 ## Extension Settings
 
 This extension contributes the following settings:
 
-* `Notes.notesLocation`: location where notes are stored
-* `Notes.notesDefaultNotesExtension`: extension used for new notes
-* `Notes.notesExtensions`: list of extensions recognized as notes or '*' for all extensions
+* `notes.notesLocation`: location where notes are stored (`~` means your home folder); changes apply without reloading
+* `notes.notesDefaultNoteExtension`: extension used for new notes
+* `notes.notesExtensions`: list of extensions recognized as notes or '*' for all extensions
 
 ## Future Plans
 

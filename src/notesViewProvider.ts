@@ -3,12 +3,14 @@ import * as fs from 'fs';
 import * as gl from 'glob';
 import * as path from 'path';
 import { Note } from './note';
+import { notesGlob } from './util';
 
-export class NotesViewProvider implements vscode.TreeDataProvider<Note> {
+export class NotesViewProvider implements vscode.TreeDataProvider<Note>, vscode.Disposable {
 
     private _onDidChangeTreeData: vscode.EventEmitter<Note | undefined> = new vscode.EventEmitter<Note | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Note | undefined> = this._onDidChangeTreeData.event;
-    private folderMap: Map<string, Note[]> = new Map<string, Note[]>();
+    private watcher: vscode.FileSystemWatcher | undefined;
+    private refreshTimer: NodeJS.Timeout | undefined;
 
     // constructor for NotesViewProvider
     constructor(
@@ -18,13 +20,46 @@ export class NotesViewProvider implements vscode.TreeDataProvider<Note> {
 
     // initialize NotesViewProvider
     public init(): NotesViewProvider {
-        this.refresh();
+        this.configure(this.notesLocation, this.notesExtensions);
         return this;
+    }
+
+    // point the tree at a (possibly new) notes location, no window reload needed
+    configure(notesLocation: string, notesExtensions: string): void {
+        this.notesLocation = notesLocation;
+        this.notesExtensions = notesExtensions;
+
+        // watch the notes location so notes added, renamed or deleted outside the tree show up
+        this.watcher?.dispose();
+        this.watcher = undefined;
+        if (notesLocation) {
+            this.watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(vscode.Uri.file(notesLocation), '**/*'));
+            this.watcher.onDidCreate(() => this.scheduleRefresh());
+            this.watcher.onDidDelete(() => this.scheduleRefresh());
+        }
+
+        this.refresh();
     }
 
     // refresh the tree view
     refresh(): void {
         this._onDidChangeTreeData.fire(undefined);
+    }
+
+    // file events arrive in bursts, refresh once they settle
+    private scheduleRefresh(): void {
+        if (this.refreshTimer) {
+            clearTimeout(this.refreshTimer);
+        }
+        this.refreshTimer = setTimeout(() => this.refresh(), 100);
+    }
+
+    dispose(): void {
+        this.watcher?.dispose();
+        if (this.refreshTimer) {
+            clearTimeout(this.refreshTimer);
+        }
+        this._onDidChangeTreeData.dispose();
     }
 
     // get the parent of a note
@@ -64,10 +99,9 @@ export class NotesViewProvider implements vscode.TreeDataProvider<Note> {
             try {
                 const items = fs.readdirSync(notesLocation, { withFileTypes: true });
 
-                // Add folders first
+                // Add folders first, skipping hidden ones like .git (the glob below skips hidden files too)
                 for (const item of items) {
-                    if (item.isDirectory()) {
-                        const folderPath = path.join(notesLocation, item.name);
+                    if (item.isDirectory() && !item.name.startsWith('.')) {
                         const folderNote = new Note(
                             item.name,
                             notesLocation,
@@ -96,14 +130,7 @@ export class NotesViewProvider implements vscode.TreeDataProvider<Note> {
                 };
 
                 // get the list of notes in the notes location
-                let notes;
-                if (notesExtensions === '*') {
-                    // If '*' is specified, get all files (excluding directories)
-                    notes = gl.sync('*', { cwd: notesLocation, nodir: true, nocase: true }).map(listOfNotes);
-                } else {
-                    // Otherwise, filter by the specified extensions
-                    notes = gl.sync(`*.{${notesExtensions}}`, { cwd: notesLocation, nodir: true, nocase: true }).map(listOfNotes);
-                }
+                const notes = gl.sync(notesGlob(notesExtensions), { cwd: notesLocation, nodir: true, nocase: true }).map(listOfNotes);
                 result.push(...notes);
             } catch (err) {
                 console.error('Error reading directory:', err);
@@ -117,7 +144,7 @@ export class NotesViewProvider implements vscode.TreeDataProvider<Note> {
                 if (!a.isFolder && b.isFolder) {
                     return 1;
                 }
-                return a.name.localeCompare(b.name);
+                return a.name.localeCompare(b.name, undefined, { numeric: true });
             });
 
             return result;

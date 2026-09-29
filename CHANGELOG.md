@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-29
+
+Forked as `arthursav.vscode-notes`, installed from source (not on the Marketplace).
+
+### Fixed
+
+* new notes failed when the name had a `/` (e.g. a date like 9/29), when the notes folder didn't exist yet, or when no notes folder was set (it tried to write to the root of the disk)
+* the new note name box closed, dropping the note, whenever focus moved elsewhere
+* new, renamed and deleted notes could be missing from the tree until a manual refresh
+* new note with a note selected in the tree (instead of a folder) failed; it now goes next to that note
+* `todo.md` became `todo.md.md`
+* a single extension in `notes.notesExtensions` (e.g. `md`) showed no notes at all
+* List Notes opened a note named "undefined" when dismissed, and listed folders but not the notes inside them
+* the settings (gear) button opened an empty settings page
+* errors now say why an operation failed
+
+### Changed
+
+* existing names are refused in the name box while typing, instead of after
+* changing `notes.notesLocation` or `notes.notesExtensions` applies right away, no window reload
+* notes added or removed outside VS Code (sync, git, another window) show up in the tree
+* hidden folders such as `.git` are not shown
+* deleting moves notes and folders to the trash (unless `files.enableTrash` is off), after a modal confirmation
+* renaming keeps open editors on the renamed note
+* `~` and `${userHome}` work in `notes.notesLocation`
+* the extension always runs locally (`extensionKind: ui`), so a Remote SSH window still uses the notes folder on your machine
+* integration tests run in the installed VS Code instead of downloading one
+
 ## [2.0.0] - 2025-03-26
 
 ### Added
@@ -58,7 +86,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * create a new note
 * list new notes
 
-[Unreleased]: https://github.com/dionmunk/vscode-notes/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/ArthurSav/vscode-notes/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/ArthurSav/vscode-notes/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/dionmunk/vscode-notes/compare/v1.2.1...v2.0.0
 [1.2.1]: https://github.com/dionmunk/vscode-notes/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/dionmunk/vscode-notes/compare/v1.1.0...v1.2.0
