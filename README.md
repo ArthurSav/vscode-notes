@@ -1,10 +1,10 @@
 # Notes
 
 [![Creative Commons](https://flat.badgen.net/badge/license/CC-BY-NC-4.0/orange)](https://creativecommons.org/licenses/by-nc/4.0/)
-[![GitHub](https://flat.badgen.net/github/release/dionmunk/vscode-notes/)](https://github.com/dionmunk/vscode-notes/releases)
-[![Visual Studio Marketplace](https://vsmarketplacebadges.dev/installs/dionmunk.vscode-notes.png?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=dionmunk.vscode-notes)
 
 Notes is a Markdown focused notes extension for Visual Studio Code that takes inspiration from Notational Velocity and nvAlt.
+
+This is a fork of [dionmunk/vscode-notes](https://github.com/dionmunk/vscode-notes) by Dion Munk, with bug fixes. It is not published to the Marketplace; build and install it from source (see [Install from source](#install-from-source)).
 
 ![Notes Demo](/screenshots/screenshot.png?raw=true "Notes Demo")
 
@@ -21,6 +21,16 @@ The extension can be accessed using the Notes icon that is placed in the Activit
 ## Getting Started
 
 Notes will prompt you for a storage location the first time you access the extension from the Activity Bar or through the Command Pallet. If you would like to change the storage location, later on, you can access the Notes extension settings by clicking on the gear icon in Notes or from the Command Pallet. After you've selected a storage location, you can access your notes from the Notes icon in the Activity Bar, or through the Command Pallet.
+
+## Install from source
+
+```sh
+npm install
+npx @vscode/vsce package
+code --install-extension vscode-notes-<version>.vsix
+```
+
+If the original `dionmunk.vscode-notes` is installed, uninstall it first: both contribute the same commands and view.
 
 ## Extension Settings
 

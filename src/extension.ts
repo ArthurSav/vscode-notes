@@ -6,7 +6,7 @@ import { Note } from './note';
 import { NotesViewProvider } from './notesViewProvider';
 
 let extId = 'vscode-notes';
-let extPub = 'dionmunk';
+let extPub = 'arthursav';
 
 // activate extension
 export function activate(context: vscode.ExtensionContext) {
@@ -433,7 +433,7 @@ export class Notes {
 		const notesLocation = Notes.getNotesLocation();
 		if (notesLocation) {
 			// If notesLocation is not null, take the user to the extension settings
-			vscode.commands.executeCommand('workbench.action.openSettings', `@ext:dionmunk.vscode-notes`);
+			vscode.commands.executeCommand('workbench.action.openSettings', `@ext:${extPub}.${extId}`);
 			return;
 		}
 

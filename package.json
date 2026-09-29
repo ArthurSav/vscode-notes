@@ -3,12 +3,18 @@
 	"displayName": "Notes",
 	"description": "Notes is a Markdown focused notes extension for Visual Studio Code that takes inspiration from Notational Velocity and nvAlt.",
 	"version": "2.0.0",
-	"publisher": "dionmunk",
+	"publisher": "arthursav",
 	"license": "CC-BY-NC-4.0",
 	"author": {
 		"name": "Dion Munk",
 		"url": "https://github.com/dionmunk"
 	},
+	"contributors": [
+		{
+			"name": "Arthur Saveliev",
+			"url": "https://github.com/ArthurSav"
+		}
+	],
 	"keywords": [
 		"notes",
 		"notational velocity",
@@ -16,11 +22,11 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/dionmunk/vscode-notes"
+		"url": "https://github.com/ArthurSav/vscode-notes"
 	},
-	"homepage": "https://github.com/dionmunk/vscode-notes#readme",
+	"homepage": "https://github.com/ArthurSav/vscode-notes#readme",
 	"bugs": {
-		"url": "https://github.com/dionmunk/vscode-notes/issues"
+		"url": "https://github.com/ArthurSav/vscode-notes/issues"
 	},
 	"icon": "resources/icon.png",
 	"engines": {
